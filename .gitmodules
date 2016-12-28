@@ -1,3 +1,6 @@
 [submodule "Viking_API"]
 	path = Viking_API
 	url = https://github.com/fmorris2/Viking_API
+[submodule "Orion_Woodcutter"]
+	path = Orion_Woodcutter
+	url = https://github.com/fmorris2/Orion_Woodcutter

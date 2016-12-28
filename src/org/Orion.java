@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.mission.OrionWoodcutter;
 import org.paint.OrionPaint;
 
 import viking.framework.mission.Mission;
@@ -16,7 +17,7 @@ public class Orion extends VikingScript
 	public Queue<Mission> generateMissions()
 	{
 		//EXAMPLE: return new LinkedList<>(Arrays.asList(new OrionTutorial, new OrionQuester))
-		return new LinkedList<>(Arrays.asList());
+		return new LinkedList<>(Arrays.asList(new OrionWoodcutter(this)));
 	}
 
 	@Override

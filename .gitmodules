@@ -1,0 +1,3 @@
+[submodule "Viking_API"]
+	path = Viking_API
+	url = https://github.com/fmorris2/Viking_API

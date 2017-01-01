@@ -1,20 +1,17 @@
 package org.manager;
 
 import org.Orion;
-import org.osbot.rs07.constants.ResponseCode;
-import org.osbot.rs07.listener.LoginResponseCodeListener;
 
-public class StatusChecks implements LoginResponseCodeListener
-{
-	private static final int BANNED_CODE = 4;
-	
+import viking.api.login.VLogin;
+
+public class StatusChecks
+{	
 	private Orion orion;
 	private boolean isBanned, isLocked;
 	
 	public StatusChecks(Orion o)
 	{
 		orion = o;
-		o.bot.addLoginListener(this);
 	}
 	
 	public void perform()
@@ -43,30 +40,34 @@ public class StatusChecks implements LoginResponseCodeListener
 		if(!isBanned && !isLocked && !orion.BREAK_MANAGER.isBreaking())
 		{
 			orion.log(this, false, "Attempting to login...");
+			String[] params = orion.getParameters().split(".");
+			VLogin login = orion.getUtils().login;
+			if(!login.login(params[0], params[1]))
+			{
+				if(login.isBanned())
+				{
+					orion.log(this, false, "Banned account");
+					orion.OCC_CLIENT.setBanned(true);
+					isBanned = true;
+				}
+				else if(login.isLocked())
+				{
+					orion.log(this, false, "Locked account");
+					orion.OCC_CLIENT.setLocked(true);
+					isLocked = true;
+				}
+				else if(login.isInvalid())
+				{
+					orion.log(this, false, "Invalid user / pass");
+				}
+			}
+			else
+				orion.log(this, false, "Successfully logged in");
 		}
 	}
 	
 	private void loggedInChecks()
 	{
 		//check if idle
-	}
-
-	@Override
-	public void onResponseCode(int code) throws InterruptedException
-	{
-		if(ResponseCode.isDisabledError(code))
-		{
-			orion.log(this, false, "Disabled error code: " + code);
-			if(code == BANNED_CODE)
-			{
-				orion.OCC_CLIENT.setBanned(true);
-				isBanned = true;
-			}
-			else
-			{
-				orion.OCC_CLIENT.setLocked(true);
-				isLocked = true;
-			}
-		}
 	}
 }

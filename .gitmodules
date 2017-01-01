@@ -4,3 +4,6 @@
 [submodule "Orion_Woodcutter"]
 	path = Orion_Woodcutter
 	url = https://github.com/fmorris2/Orion_Woodcutter
+[submodule "Orion_Fisher"]
+	path = Orion_Fisher
+	url = https://github.com/fmorris2/Orion_Fisher

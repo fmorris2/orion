@@ -1,13 +1,20 @@
 package org.manager;
 
 import org.Orion;
+import org.osbot.rs07.api.map.Position;
 
+import viking.api.Timing;
 import viking.api.login.VLogin;
+import viking.framework.mission.Mission;
 
 public class StatusChecks
 {	
+	private static final long POS_SENT_THRESH = 10000;
+	
 	private Orion orion;
-	private boolean isBanned, isLocked;
+	private boolean isBanned, isLocked, sentDisplayName;
+	private Position playerPos;
+	private long lastPosSent;
 	
 	public StatusChecks(Orion o)
 	{
@@ -17,16 +24,19 @@ public class StatusChecks
 	public void perform()
 	{
 		if(orion.client.getLoginState() == null)
+		{
+			orion.log(this, false, "Login state is null... returning");
 			return;
+		}
 		
 		switch(orion.client.getLoginState())
 		{
 			case LOGGED_OUT:
-				orion.OCC_CLIENT.setLoggedIn(false);
+				orion.occClient.set("is_logged_in", "false", true);
 				loggedOutChecks();
 			break;
 			case LOGGED_IN:
-				orion.OCC_CLIENT.setLoggedIn(true);
+				orion.occClient.set("is_logged_in", "true", true);
 				loggedInChecks();
 			break;
 			default:
@@ -40,25 +50,33 @@ public class StatusChecks
 		if(!isBanned && !isLocked && !orion.BREAK_MANAGER.isBreaking())
 		{
 			orion.log(this, false, "Attempting to login...");
-			String[] params = orion.getParameters().split(".");
+			String pass = orion.PARAMS.get("pass");
+			if(pass == null)
+				return;
+			
 			VLogin login = orion.getUtils().login;
-			if(!login.login(params[0], params[1]))
+			if(!login.login(orion.bot.getUsername(), pass))
 			{
 				if(login.isBanned())
 				{
 					orion.log(this, false, "Banned account");
-					orion.OCC_CLIENT.setBanned(true);
+					orion.occClient.set("is_banned", "true", true);
 					isBanned = true;
 				}
 				else if(login.isLocked())
 				{
 					orion.log(this, false, "Locked account");
-					orion.OCC_CLIENT.setLocked(true);
+					orion.occClient.set("is_locked", "true", true);
 					isLocked = true;
 				}
 				else if(login.isInvalid())
 				{
 					orion.log(this, false, "Invalid user / pass");
+				}
+				else if(login.isRSUpdate())
+				{
+					orion.log(this, false, "RS Update!");
+					orion.occClient.killInstance();
 				}
 			}
 			else
@@ -68,6 +86,38 @@ public class StatusChecks
 	
 	private void loggedInChecks()
 	{
-		//check if idle
+		//send script status
+		Mission current = orion.getMissionHandler().getCurrent();
+		if(current != null && current.getCurrentTaskName() != null)
+			orion.occClient.set("script_status", current.getCurrentTaskName().replace(" ", "_"), false);
+		
+		//check if we need to set the display name
+		if(!sentDisplayName)
+		{
+			orion.occClient.set("display_name", orion.myPlayer().getName(), true);
+			sentDisplayName = true;
+		}
+		
+		//check if welcome screen is still up
+		if(orion.getUtils().login.getLobbyButton() != null)
+			orion.getUtils().login.clickLobbyButton();
+		
+		checkForIdle();
+	}
+	
+	private void checkForIdle()
+	{
+		//idle check / position update
+		if(!orion.myPosition().equals(playerPos))
+		{
+			playerPos = orion.myPosition();
+			
+			if(Timing.timeFromMark(lastPosSent) > POS_SENT_THRESH)
+			{
+				orion.occClient.set("pos_x", ""+playerPos.getX(), true);
+				orion.occClient.set("pos_y", ""+playerPos.getY(), true);
+				lastPosSent = Timing.currentMs();
+			}
+		}
 	}
 }

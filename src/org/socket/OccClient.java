@@ -1,8 +1,12 @@
 package org.socket;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.Orion;
 
@@ -13,12 +17,16 @@ public class OccClient
 	
 	private Socket socket;
 	private PrintWriter out;
+	private BufferedReader in;
 	private Orion orion;
-	private boolean banned, locked, loggedIn, idle, breaking;
+	private String instanceId;
+	private Map<String, String> vals;
 	
-	public OccClient(Orion o)
+	public OccClient(Orion o, String instanceId)
 	{
 		orion = o;
+		this.instanceId = instanceId;
+		vals = new HashMap<>();
 	}
 	
 	public boolean init()
@@ -27,6 +35,7 @@ public class OccClient
 		{
 			socket = new Socket(OCC_IP, OCC_PORT);
 			out = new PrintWriter(socket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			orion.log(this, false, "Socket bound to cluster controller");
 			return true;
 		} 
@@ -38,48 +47,37 @@ public class OccClient
 		return false;
 	}
 	
-	public void setBanned(boolean b)
+	public void set(String key, String val, boolean accountUpdate)
 	{
-		if(banned == b)
-			return;
+		String cachedVal = vals.get(key);
 		
-		banned = b;
-		out.println("SET is_banned="+b);
+		if(cachedVal == null || !cachedVal.equals(val))
+		{
+			orion.log(this, false, "SET " + instanceId + " " + (accountUpdate ? "account" : "instance") + " " + key+":"+val);
+			vals.put(key, val);
+			out.println("SET " + instanceId + " " + (accountUpdate ? "account" : "instance") + " " + key+":"+val);
+		}
 	}
 	
-	public void setLocked(boolean b)
+	public String sendAndListen(String command)
 	{
-		if(locked == b)
-			return;
+		try
+		{
+			out.println("QUERY " + instanceId + " " + command);
+			String fromOcc = in.readLine();
+			orion.log(this, false, "Response from OCC: " + fromOcc);
+			return fromOcc;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		
-		locked = b;
-		out.println("SET is_locked="+b);
+		return null;
 	}
 	
-	public void setLoggedIn(boolean b)
+	public void killInstance()
 	{
-		if(loggedIn == b)
-			return;
-		
-		loggedIn = b;
-		out.println("SET is_logged_in="+b);
-	}
-	
-	public void setBreaking(boolean b)
-	{
-		if(breaking == b)
-			return;
-		
-		breaking = b;
-		out.println("SET is_breaking="+b);
-	}
-	
-	public void setIdle(boolean b)
-	{
-		if(idle == b)
-			return;
-		
-		idle = b;
-		out.println("SET is_idle="+b);
+		out.println("KILL " + instanceId);
 	}
 }

@@ -22,3 +22,6 @@
 [submodule "Orion_Miner"]
 	path = Orion_Miner
 	url = https://github.com/fmorris2/Orion_Miner
+[submodule "Orion_Mule"]
+	path = Orion_Mule
+	url = https://github.com/fmorris2/Orion_Mule

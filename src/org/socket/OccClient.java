@@ -59,11 +59,11 @@ public class OccClient
 		}
 	}
 	
-	public String sendAndListen(String command)
+	public String sendAndListen(String command, boolean query)
 	{
 		try
 		{
-			out.println("QUERY " + instanceId + " " + command);
+			out.println(query ? ("QUERY " + instanceId + " " + command) : command);
 			String fromOcc = in.readLine();
 			orion.log(this, false, "Response from OCC: " + fromOcc);
 			return fromOcc;
@@ -76,8 +76,25 @@ public class OccClient
 		return null;
 	}
 	
+	public void send(String command, boolean query)
+	{
+		try
+		{
+			out.println(query ? ("QUERY " + instanceId + " " + command) : command);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public void killInstance()
 	{
 		out.println("KILL " + instanceId);
+	}
+	
+	public String getInstanceId()
+	{
+		return instanceId;
 	}
 }

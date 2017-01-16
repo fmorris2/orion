@@ -1,7 +1,10 @@
 package org.location;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -53,7 +56,10 @@ public class LocationSelector
 		}
 		
 		//now figure out what is actually the best loc
-		ChoppingLocation[] vals = ChoppingLocation.values();
+		List<ChoppingLocation> shuffled = Arrays.asList(ChoppingLocation.values());
+		Collections.shuffle(shuffled);
+		
+		ChoppingLocation[] vals = shuffled.toArray(new ChoppingLocation[shuffled.size()]);
 		TreeType type = TreeType.valueOf(treeType);
 		ChoppingLocation best = null;
 		boolean lookingForMem = !members.equals("free");
@@ -85,7 +91,7 @@ public class LocationSelector
 	{
 		Map<String, String> toReturn = new HashMap<>();
 		
-		String locString = orion.occClient.sendAndListen("getLocInfo");
+		String locString = orion.occClient.sendAndListen("getLocInfo", true);
 		if(locString == null)
 			return null;
 		

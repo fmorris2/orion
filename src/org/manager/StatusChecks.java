@@ -1,6 +1,7 @@
 package org.manager;
 
 import org.Orion;
+import org.OrionMule;
 import org.osbot.rs07.api.map.Position;
 
 import viking.api.Timing;
@@ -47,6 +48,12 @@ public class StatusChecks
 	
 	private void loggedOutChecks()
 	{
+		Mission current = orion.getMissionHandler().getCurrent();
+		OrionMule mule = (current instanceof OrionMule) ? (OrionMule)current : null;
+		
+		if(mule != null && !mule.shouldLogin)
+			return;
+		
 		if(!isBanned && !isLocked && !orion.BREAK_MANAGER.isBreaking())
 		{
 			orion.log(this, false, "Attempting to login...");
@@ -102,12 +109,12 @@ public class StatusChecks
 		if(orion.getUtils().login.getLobbyButton() != null)
 			orion.getUtils().login.clickLobbyButton();
 		
-		checkForIdle();
+		checkForPosUpdate();
 	}
 	
-	private void checkForIdle()
+	private void checkForPosUpdate()
 	{
-		//idle check / position update
+		//position update
 		if(!orion.myPosition().equals(playerPos))
 		{
 			playerPos = orion.myPosition();
@@ -116,6 +123,7 @@ public class StatusChecks
 			{
 				orion.occClient.set("pos_x", ""+playerPos.getX(), true);
 				orion.occClient.set("pos_y", ""+playerPos.getY(), true);
+				orion.occClient.set("pos_z", ""+playerPos.getZ(), true);
 				lastPosSent = Timing.currentMs();
 			}
 		}

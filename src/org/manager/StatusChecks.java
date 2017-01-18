@@ -3,6 +3,7 @@ package org.manager;
 import org.Orion;
 import org.OrionMule;
 import org.osbot.rs07.api.map.Position;
+import org.osbot.rs07.api.ui.Skill;
 
 import viking.api.Timing;
 import viking.api.login.VLogin;
@@ -11,11 +12,12 @@ import viking.framework.mission.Mission;
 public class StatusChecks
 {	
 	private static final long POS_SENT_THRESH = 10000;
+	private static final int SKILLS_SENT_THRESH = 10000;
 	
 	private Orion orion;
 	private boolean isBanned, isLocked, sentDisplayName;
 	private Position playerPos;
-	private long lastPosSent;
+	private long lastPosSent, lastSkillsSent;
 	
 	public StatusChecks(Orion o)
 	{
@@ -76,10 +78,6 @@ public class StatusChecks
 					orion.occClient.set("is_locked", "true", true);
 					isLocked = true;
 				}
-				else if(login.isInvalid())
-				{
-					orion.log(this, false, "Invalid user / pass");
-				}
 				else if(login.isRSUpdate())
 				{
 					orion.log(this, false, "RS Update!");
@@ -110,6 +108,7 @@ public class StatusChecks
 			orion.getUtils().login.clickLobbyButton();
 		
 		checkForPosUpdate();
+		checkForSkillsUpdate();
 	}
 	
 	private void checkForPosUpdate()
@@ -121,11 +120,27 @@ public class StatusChecks
 			
 			if(Timing.timeFromMark(lastPosSent) > POS_SENT_THRESH)
 			{
-				orion.occClient.set("pos_x", ""+playerPos.getX(), true);
-				orion.occClient.set("pos_y", ""+playerPos.getY(), true);
-				orion.occClient.set("pos_z", ""+playerPos.getZ(), true);
+				orion.occClient.set("pos", playerPos.getX()+","+playerPos.getY()+","+playerPos.getZ(), true);
 				lastPosSent = Timing.currentMs();
 			}
+		}
+	}
+	
+	private void checkForSkillsUpdate()
+	{
+		if(Timing.timeFromMark(lastSkillsSent) > SKILLS_SENT_THRESH)
+		{
+			String skillString = "";
+			Skill[] skills = Skill.values();
+			for(Skill s : skills)
+			{
+				skillString += orion.skills.getStatic(s);
+				if(s != skills[skills.length - 1])
+					skillString += ",";
+			}
+			
+			orion.occClient.set("stats", skillString, true);
+			lastSkillsSent = Timing.currentMs();
 		}
 	}
 }

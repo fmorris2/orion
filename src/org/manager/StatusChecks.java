@@ -78,6 +78,8 @@ public class StatusChecks
 					orion.occClient.set("is_locked", "true", true);
 					isLocked = true;
 				}
+				else if(login.isInvalid())
+					orion.occClient.set("script_status", "invalid user / pass", false);
 				else if(login.isRSUpdate())
 				{
 					orion.log(this, false, "RS Update!");

@@ -99,6 +99,11 @@ public class Orion extends VikingScript implements CommandReceiver
 				muleOrderEvent.getOrder().muleAt = Integer.parseInt(occClient.sendAndListen("SLAVE " + occClient.getInstanceId() + " MULE_AT", false));
 				muleOrderMission = current;
 			}
+			else if(!muleOrderEvent.getOrder().equals(((MuleManagement)current).getOrder()))
+			{
+				log(this, false, "Mule order has changed since the start of the mission... updating...");
+				muleOrderEvent = new MuleOrderEvent(this, ((MuleManagement)current).getOrder());
+			}
 			else if(muleOrderEvent.shouldExecute() && updateEvent())
 			{
 				while(!muleOrderEvent.hasFinished())

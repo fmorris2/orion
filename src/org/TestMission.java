@@ -55,6 +55,7 @@ public class TestMission extends Mission implements ItemManagement
 	public int execute()
 	{
 		script.log(this, false, "Test");
+		script.log(configs.get(43));
 		return 600;
 	}
 

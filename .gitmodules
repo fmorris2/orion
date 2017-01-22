@@ -28,3 +28,6 @@
 [submodule "Orion_Combat"]
 	path = Orion_Combat
 	url = https://github.com/fmorris2/Orion_Combat
+[submodule "Orion_Jugs"]
+	path = Orion_Jugs
+	url = https://github.com/fmorris2/Orion_Jugs

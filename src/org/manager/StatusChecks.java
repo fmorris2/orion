@@ -99,9 +99,10 @@ public class StatusChecks
 			orion.occClient.set("script_status", current.getCurrentTaskName().replace(" ", "_"), false);
 		
 		//check if we need to set the display name
-		if(!sentDisplayName)
+		String name = orion.myPlayer().getName();
+		if(!sentDisplayName && name != null && !name.equals("null"))
 		{
-			orion.occClient.set("display_name", orion.myPlayer().getName(), true);
+			orion.occClient.set("display_name", name, true);
 			sentDisplayName = true;
 		}
 		

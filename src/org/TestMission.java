@@ -1,5 +1,9 @@
 package org;
 
+import org.data.enums.LOCATION;
+import org.osbot.rs07.api.map.Area;
+import org.osbot.rs07.api.map.Position;
+
 import viking.framework.goal.GoalList;
 import viking.framework.goal.impl.InfiniteGoal;
 import viking.framework.item_management.IMEntry;
@@ -54,9 +58,11 @@ public class TestMission extends Mission implements ItemManagement
 	@Override
 	public int execute()
 	{
-		script.log(this, false, "Test");
-		script.log(configs.get(43));
-		return 600;
+		script.log(this, false, "Walk to hill giants");
+		Area area = LOCATION.OC_HILL_DUNG.LOCATION.getArea();
+		Position pos = LOCATION.OC_HILL_DUNG.LOCATION.getCenterTile();
+		walkUtils.walkTo(pos, conditions.inAreaCondition(area), null, 600, 10);
+		return 60000;
 	}
 
 	@Override

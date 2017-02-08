@@ -3,6 +3,7 @@ package org.manager;
 import org.Orion;
 import org.OrionMule;
 import org.osbot.rs07.api.map.Position;
+import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Skill;
 
 import viking.api.Timing;
@@ -32,6 +33,12 @@ public class StatusChecks
 			return;
 		}
 		
+		defaultChecks();
+		
+		RS2Widget lobby = orion.getUtils().login.getLobbyButton(); 
+		if(lobby != null)
+			lobby.interact();
+		
 		switch(orion.client.getLoginState())
 		{
 			case LOGGED_OUT:
@@ -46,6 +53,18 @@ public class StatusChecks
 				orion.log(this, false, "Unhandled login state: " + orion.client.getLoginState());
 			break;
 		}
+	}
+	
+	private void defaultChecks()
+	{
+		//send script status
+		Mission current = orion.getMissionHandler().getCurrent();
+		if(current != null && current.getCurrentTaskName() != null)
+			orion.occClient.set("script_status", current.getCurrentTaskName().replace(" ", "_"), false);
+		
+		//send current mission
+		if(current != null)
+			orion.occClient.set("current_mission", current.getMissionName().replace(" ", "_"), true);
 	}
 	
 	private void loggedOutChecks()
@@ -71,12 +90,15 @@ public class StatusChecks
 					orion.log(this, false, "Banned account");
 					orion.occClient.set("is_banned", "true", true);
 					isBanned = true;
+					orion.occClient.killInstance();
 				}
 				else if(login.isLocked())
 				{
 					orion.log(this, false, "Locked account");
 					orion.occClient.set("is_locked", "true", true);
 					isLocked = true;
+					orion.occClient.reportLock();
+					orion.occClient.killInstance();
 				}
 				else if(login.isInvalid())
 					orion.occClient.set("script_status", "invalid user / pass", false);
@@ -93,11 +115,6 @@ public class StatusChecks
 	
 	private void loggedInChecks()
 	{
-		//send script status
-		Mission current = orion.getMissionHandler().getCurrent();
-		if(current != null && current.getCurrentTaskName() != null)
-			orion.occClient.set("script_status", current.getCurrentTaskName().replace(" ", "_"), false);
-		
 		//check if we need to set the display name
 		String name = orion.myPlayer().getName();
 		if(!sentDisplayName && name != null && !name.equals("null"))

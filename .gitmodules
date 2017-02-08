@@ -1,33 +1,36 @@
 [submodule "Viking_API"]
 	path = Viking_API
 	url = https://github.com/fmorris2/Viking_API
-[submodule "Orion_Woodcutter"]
-	path = Orion_Woodcutter
-	url = https://github.com/fmorris2/Orion_Woodcutter
-[submodule "Orion_Fisher"]
-	path = Orion_Fisher
-	url = https://github.com/fmorris2/Orion_Fisher
-[submodule "Orion_Tutorial"]
-	path = Orion_Tutorial
-	url = https://github.com/fmorris2/Orion_Tutorial
-[submodule "Orion_RJ"]
-	path = Orion_RJ
-	url = https://github.com/fmorris2/Orion_RJ
-[submodule "Orion_RuneMys"]
-	path = Orion_RuneMys
-	url = https://github.com/fmorris2/Orion_RuneMys
-[submodule "Orion_SS"]
-	path = Orion_SS
-	url = https://github.com/fmorris2/Orion_SS
 [submodule "Orion_Miner"]
 	path = Orion_Miner
 	url = https://github.com/fmorris2/Orion_Miner
+[submodule "Orion_Woodcutter"]
+	path = Orion_Woodcutter
+	url = https://github.com/fmorris2/Orion_Woodcutter
+[submodule "Orion_Prayer"]
+	path = Orion_Prayer
+	url = https://github.com/fmorris2/Orion_Prayer
 [submodule "Orion_Mule"]
 	path = Orion_Mule
 	url = https://github.com/fmorris2/Orion_Mule
+[submodule "Orion_RuneMys"]
+	path = Orion_RuneMys
+	url = https://github.com/fmorris2/Orion_RuneMys
 [submodule "Orion_Combat"]
 	path = Orion_Combat
 	url = https://github.com/fmorris2/Orion_Combat
+[submodule "Orion_SS"]
+	path = Orion_SS
+	url = https://github.com/fmorris2/Orion_SS
+[submodule "Orion_Fisher"]
+	path = Orion_Fisher
+	url = https://github.com/fmorris2/Orion_Fisher
+[submodule "Orion_RJ"]
+	path = Orion_RJ
+	url = https://github.com/fmorris2/Orion_RJ
 [submodule "Orion_Jugs"]
 	path = Orion_Jugs
 	url = https://github.com/fmorris2/Orion_Jugs
+[submodule "Orion_Tutorial"]
+	path = Orion_Tutorial
+	url = https://github.com/fmorris2/Orion_Tutorial

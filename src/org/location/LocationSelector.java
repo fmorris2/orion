@@ -68,7 +68,7 @@ public class LocationSelector
 			if(loc.isMembers() && !lookingForMem) //skip over this loc if it's a mem loc and we aren't members
 				continue;
 			
-			if(loc.getMinimumCombatLevel() > orion.combat.getCombatLevel())
+			if(loc.getRecommendedCombatLevel() > orion.combat.getCombatLevel())
 				continue;
 			
 			//skip over this loc if it doesn't contain the target tree or is at max capacity

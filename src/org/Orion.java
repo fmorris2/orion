@@ -112,9 +112,7 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 	{	
 		if(Timing.timeFromMark(lastNetWorthUpdate) < NET_WORTH_TIMER)
 			return;
-		
-		log(this, false, "Send net worth");
-		
+				
 		if(current instanceof MuleManagement && muleOrderEvent != null)
 			occClient.set("net_worth", ""+muleOrderEvent.getOrder().getNetWorth(), true);
 		else if(current instanceof OrionMule && client.isLoggedIn())
@@ -178,8 +176,11 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 			log(this, false, "Updating mule event");
 			String info = occClient.sendAndListen("SLAVE " + occClient.getInstanceId() + " REQUEST", false);
 			String[] parts = info.split(";");
-			if(parts.length < 3)
+			if(parts.length < 3) //OCC returned null for mule info
+			{
+				muleOrderEvent.setHasFinished(true);
 				return false;
+			}
 			
 			int x = -1, y = -1, z = -1;
 			for(String part : parts)
@@ -242,7 +243,9 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 	public void receiveCommand(String command)
 	{
 		String[] parts = command.split(":");
-		CommandReceiver sendTo = (CommandReceiver)getMissionHandler().getCurrent();
+		CommandReceiver sendTo = null;
+		if(getMissionHandler().getCurrent() instanceof CommandReceiver)
+			sendTo = (CommandReceiver)getMissionHandler().getCurrent();
 		
 		if(parts[0].equals("getLoc"))
 		{
@@ -261,6 +264,11 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 				occClient.send("MULE " + occClient.getInstanceId() + " RESET", false);
 			else if(parts[1].equals("complete"))
 				occClient.send("MULE " + occClient.getInstanceId() + " COMPLETE " + parts[2], false);
+		}
+		else if(parts[0].equals("kill"))
+		{
+			log(this, false, "Killing this instance");
+			occClient.send("KILL " + occClient.getInstanceId(), false);
 		}
 	}
 	

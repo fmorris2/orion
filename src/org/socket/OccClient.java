@@ -88,6 +88,11 @@ public class OccClient
 		}
 	}
 	
+	public void reportLock()
+	{
+		out.println("LOCK " + instanceId);
+	}
+	
 	public void killInstance()
 	{
 		out.println("KILL " + instanceId);

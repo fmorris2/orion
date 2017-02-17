@@ -31,8 +31,8 @@ import viking.api.skills.fishing.enums.FishType;
 import viking.api.skills.mining.enums.RockType;
 import viking.api.skills.woodcutting.enums.TreeType;
 import viking.framework.command.CommandReceiver;
+import viking.framework.goal.Goal;
 import viking.framework.goal.impl.CombatGoal;
-import viking.framework.goal.impl.InfiniteGoal;
 import viking.framework.goal.impl.TimeGoal;
 import viking.framework.mission.Mission;
 import viking.framework.mule.MuleManagement;
@@ -47,7 +47,7 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 	private static final long MULE_EVENT_TIMER = 60000 * 2, NET_WORTH_TIMER = 30000;
 	private static final Map<Integer, Integer> PRICE_MAP = new HashMap<>();
 	
-	public final BreakManager BREAK_MANAGER = new BreakManager();
+	public final BreakManager BREAK_MANAGER = new BreakManager(this);
 	
 	public OccClient occClient;
 	
@@ -79,7 +79,11 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 			generated.addAll(getVarietyMissions());
 		
 		//task / spec
-		generated.add(getTaskMission());
+		for(int i = 0; i < 100; i++)
+		{
+			generated.add(getTaskMission());
+			generated.add(getRandomVarietyMission());
+		}
 		
 		return generated;
 	}
@@ -91,6 +95,9 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 		
 		//check account status
 		statusChecks.perform();
+		
+		if(BREAK_MANAGER.isBreaking())
+			return 2000;
 		
 		//check net worth
 		sendNetWorth(current);
@@ -209,6 +216,7 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 		occClient = new OccClient(this, PARAMS.get("instanceId"));
 		locSelector = new LocationSelector(this);
 		statusChecks = new StatusChecks(this);
+		BREAK_MANAGER.setBedtime(Integer.parseInt(PARAMS.get("bedtime")));
 		
 		if(!occClient.init())
 			stop();
@@ -272,6 +280,20 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 		}
 	}
 	
+	private Mission getRandomVarietyMission()
+	{
+		List<Mission> missions = new ArrayList<>();
+		long oneMinute = 60000;
+		long minutes = MethodProvider.random(30, 180);
+		Goal timeGoal = new TimeGoal(oneMinute * minutes);
+		
+		missions.add(new OrionCombat(this, CombatType.MELEE, null, true, timeGoal));
+		missions.add(new OrionWoodcutter(this, TreeType.values()[MethodProvider.random(0, TreeType.values().length -1)], timeGoal));
+		
+		Collections.shuffle(missions);
+		return missions.get(0);
+	}
+	
 	private List<Mission> getVarietyMissions()
 	{
 		List<Mission> variety = new ArrayList<>();
@@ -283,6 +305,10 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 	
 	private Mission getTaskMission()
 	{
+		long oneMinute = 60000;
+		long minutes = MethodProvider.random(120, 360);
+		Goal timeGoal = new TimeGoal(oneMinute * minutes);
+		
 		Mission toReturn = null;
 		String accountType = PARAMS.get("type");
 		if(accountType.equals("1")) //MULE
@@ -301,7 +327,7 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 			if(task.equals("wc"))
 			{
 				TreeType target = TreeType.valueOf(spec.toUpperCase());
-				return new OrionWoodcutter(this, target, new InfiniteGoal());
+				return new OrionWoodcutter(this, target, timeGoal);
 			}
 			else if(task.equals("fish"))
 			{
@@ -316,11 +342,11 @@ public class Orion extends VikingScript implements CommandReceiver, CapitalScrip
 			else if(task.equals("combat"))
 			{
 				MONSTER monster = MONSTER.valueOf(spec.toUpperCase());
-				return new OrionCombat(this, CombatType.MELEE, monster, true, new InfiniteGoal());
+				return new OrionCombat(this, CombatType.MELEE, monster, true, timeGoal);
 			}
 			else if(task.equals("jugs"))
 			{
-				return new OrionJugs(this, new InfiniteGoal());
+				return new OrionJugs(this, timeGoal);
 			}
 		}
 		

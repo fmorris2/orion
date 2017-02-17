@@ -75,6 +75,9 @@ public class StatusChecks
 		if(mule != null && !mule.shouldLogin)
 			return;
 		
+		if(mule == null && orion.BREAK_MANAGER.isBreaking())
+			return;
+		
 		if(!isBanned && !isLocked && !orion.BREAK_MANAGER.isBreaking())
 		{
 			orion.log(this, false, "Attempting to login...");
@@ -115,6 +118,15 @@ public class StatusChecks
 	
 	private void loggedInChecks()
 	{
+		Mission current = orion.getMissionHandler().getCurrent();
+		OrionMule mule = (current instanceof OrionMule) ? (OrionMule)current : null;
+		
+		if(mule == null && orion.BREAK_MANAGER.isBreaking())
+		{
+			orion.logoutTab.logOut();
+			return;
+		}
+		
 		//check if we need to set the display name
 		String name = orion.myPlayer().getName();
 		if(!sentDisplayName && name != null && !name.equals("null"))

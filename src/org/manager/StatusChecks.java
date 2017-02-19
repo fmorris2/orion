@@ -139,8 +139,27 @@ public class StatusChecks
 		if(orion.getUtils().login.getLobbyButton() != null)
 			orion.getUtils().login.clickLobbyButton();
 		
+		//check for genie lamp
+		checkForGenieLamp();
+		
 		checkForPosUpdate();
 		checkForSkillsUpdate();
+	}
+	
+	private void checkForGenieLamp()
+	{
+		if(orion.inventory.contains("Lamp"))
+		{
+			orion.log(this, false, "Inventory contains genie lamp.... getting rid of it");
+			if(orion.bank.isOpen())
+				orion.bank.close();
+			else if(orion.depositBox.isOpen())
+				orion.depositBox.close();
+			else if(orion.grandExchange.isOpen())
+				orion.grandExchange.close();
+			
+			orion.inventory.drop("Lamp");
+		}
 	}
 	
 	private void checkForPosUpdate()

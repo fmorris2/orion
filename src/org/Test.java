@@ -16,7 +16,7 @@ public class Test extends VikingScript
 	@Override
 	public Queue<Mission> generateMissions()
 	{
-		return new LinkedList<>(Arrays.asList(new TestMission(this)));
+		return new LinkedList<>(Arrays.asList(new ReactionMission(this)));
 	}
 
 	@Override

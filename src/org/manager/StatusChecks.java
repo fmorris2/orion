@@ -121,7 +121,7 @@ public class StatusChecks
 		Mission current = orion.getMissionHandler().getCurrent();
 		OrionMule mule = (current instanceof OrionMule) ? (OrionMule)current : null;
 		
-		if(mule == null && orion.BREAK_MANAGER.isBreaking())
+		if(mule == null && orion.BREAK_MANAGER.isBreaking() && !orion.combat.isFighting())
 		{
 			orion.logoutTab.logOut();
 			return;

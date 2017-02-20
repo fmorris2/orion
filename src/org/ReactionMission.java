@@ -15,7 +15,7 @@ import viking.framework.script.VikingScript;
 public class ReactionMission extends Mission implements MouseInputListener
 {
 	
-	ReactionEvent reactionEvent = new TreeEvent(this, "Yew");
+	ReactionEvent reactionEvent = new TreeEvent(this, "Oak");
 	ReactionEntry reactionEntry = new ReactionEntry();
 	
 	public ReactionMission(VikingScript script)

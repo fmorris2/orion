@@ -6,7 +6,7 @@ import javax.swing.event.MouseInputListener;
 
 import viking.framework.antiban.reaction.ReactionEntry;
 import viking.framework.antiban.reaction.ReactionEvent;
-import viking.framework.antiban.reaction.events.impl.TreeEvent;
+import viking.framework.antiban.reaction.events.impl.CombatEvent;
 import viking.framework.goal.GoalList;
 import viking.framework.goal.impl.InfiniteGoal;
 import viking.framework.mission.Mission;
@@ -15,7 +15,7 @@ import viking.framework.script.VikingScript;
 public class ReactionMission extends Mission implements MouseInputListener
 {
 	
-	ReactionEvent reactionEvent = new TreeEvent(this, "Oak");
+	ReactionEvent reactionEvent = new CombatEvent(this, "Chicken");
 	ReactionEntry reactionEntry = new ReactionEntry();
 	
 	public ReactionMission(VikingScript script)

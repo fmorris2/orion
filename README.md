@@ -2,7 +2,7 @@
 
 ## Overview
 Project Orion is the successor of a previous gold-farming endeavor, Project Tesla. Orion was meant to improve on various aspects of Tesla, 
-and provide an architecture capable of a lucrative gold-farm. "Gold-farming" in Old School Runescape (OSRS) entails harvesting in-game materials,
+and provide an architecture capable of a lucrative gold-farm. "Gold-farming" in [Old School Runescape](https://oldschool.runescape.com/) (OSRS) entails harvesting in-game materials,
 trading them for gold, and selling the gold to players for real money. Orion utilized the [OSBot](https://osbot.org/forum/) client.
 
 ## Features

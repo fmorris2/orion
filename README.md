@@ -1,11 +1,11 @@
 # Project Orion
 
-# Overview
+## Overview
 Project Orion is the successor of a previous gold-farming endeavor, Project Tesla. Orion was meant to improve on various aspects of Tesla, 
 and provide an architecture capable of a lucrative gold-farm. "Gold-farming" in Old School Runescape (OSRS) entails harvesting in-game materials,
 trading them for gold, and selling the gold to players for real money. Orion utilized the [OSBot](https://osbot.org/forum/) client.
 
-# Features
+## Features
 - Scalability
   - Orion was built to handle as many "bots" as possible, in order to support a massive gold-farm
   - Whereas Tesla supported a 1-bot-per-server architecture, Orion supports a many-bot-per-server approach

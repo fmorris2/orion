@@ -17,3 +17,16 @@ trading them for gold, and selling the gold to players for real money. Orion uti
     - It is very easy to add new activities to the Orion architecture
 - Portability
   - Orion supports both Unix-based & Windows-based platforms
+  
+## Supported Tasks
+- Quests
+  - [Tutorial Island](http://oldschoolrunescape.wikia.com/wiki/Tutorial_Island)
+  - [Romeo & Juliet](http://oldschoolrunescape.wikia.com/wiki/Romeo_%26_Juliet)
+  - [Rune Mysteries](http://oldschoolrunescape.wikia.com/wiki/Rune_Mysteries)
+  - [Sheep Shearer](http://oldschoolrunescape.wikia.com/wiki/Sheep_Shearer)
+- Gathering Skills
+  - [Woodcutting](http://oldschoolrunescape.wikia.com/wiki/Woodcutting)
+  - [Fishing](http://oldschoolrunescape.wikia.com/wiki/Fishing)
+  - [Mining](http://oldschoolrunescape.wikia.com/wiki/Mining)
+- Miscellaneous
+  - [Jug filling](http://oldschoolrunescape.wikia.com/wiki/Jug_of_water)

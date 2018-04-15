@@ -18,6 +18,9 @@ trading them for gold, and selling the gold to players for real money. Orion uti
 - Portability
   - Orion supports both Unix-based & Windows-based platforms
   
+## General Bot Process
+(Coming soon)
+  
 ## Supported Tasks
 - Quests
   - [Tutorial Island](http://oldschoolrunescape.wikia.com/wiki/Tutorial_Island)
